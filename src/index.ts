@@ -5,4 +5,10 @@ new Game({
   width: 1000,
   height: 800,
   scene: MainScene,
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: false,
+    },
+  },
 });
