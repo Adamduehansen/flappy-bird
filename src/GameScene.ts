@@ -106,7 +106,7 @@ class GameScene extends Scene {
   }
 
   private pushPlayer() {
-    this.#player.setVelocityY(-300);
+    this.#player.setVelocityY(-500);
   }
 
   private newGame() {
@@ -121,7 +121,7 @@ class GameScene extends Scene {
     this.#stageRunning = false;
     this.#enablePlayerControl = false;
     this.#player.stop();
-    this.#player.setVelocityY(-300);
+    this.pushPlayer();
     this.#playerGroundCollider.active = false;
     this.#animateGround = false;
   }

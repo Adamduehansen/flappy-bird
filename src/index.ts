@@ -11,7 +11,7 @@ new Game({
     arcade: {
       debug: true,
       gravity: {
-        y: 400,
+        y: 1600,
       },
     },
   },
