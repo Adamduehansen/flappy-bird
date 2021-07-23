@@ -8,9 +8,9 @@ class GameScene extends Scene {
   #groundGroup!: Physics.Arcade.StaticGroup;
   #player!: Types.Physics.Arcade.SpriteWithDynamicBody;
   #playerGroundCollider!: Physics.Arcade.Collider;
-  #message!: GameObjects.Image;
 
   #messageFadeOutTween!: Tweens.Tween;
+  #gameOverFadeInTween!: Tweens.Tween;
 
   public preload() {
     this.load.image('background', 'assets/background-day.png');
@@ -20,13 +20,15 @@ class GameScene extends Scene {
       frameWidth: 36,
       frameHeight: 24,
     });
+    this.load.image('gameover', 'assets/gameover.png');
   }
 
   public create() {
-    this.add.image(0, 0, 'background').setScale(3.5, 3.5).setOrigin(0, 0.4);
+    this.add.image(0, 0, 'background').setScale(3.5).setOrigin(0, 0.4);
     this.createMessage();
     this.createPlayer();
     this.createGround();
+    this.createGameOver();
 
     this.#playerGroundCollider = this.physics.add.collider(
       this.#player,
@@ -63,7 +65,7 @@ class GameScene extends Scene {
   }
 
   private createMessage() {
-    this.#message = this.add
+    const message = this.add
       .image(
         this.cameras.main.width / 2,
         this.cameras.main.height / 2,
@@ -72,9 +74,12 @@ class GameScene extends Scene {
       .setScale(2.5, 2);
 
     this.#messageFadeOutTween = this.tweens.add({
-      targets: this.#message,
-      alpha: { value: 0, duration: 500, ease: 'Power1' },
-      loop: 0,
+      targets: message,
+      alpha: {
+        value: 0,
+        duration: 500,
+        ease: 'Power1',
+      },
       paused: true,
     });
   }
@@ -88,7 +93,7 @@ class GameScene extends Scene {
 
     this.#player = this.physics.add
       .sprite(150, this.cameras.main.height / 2, 'yellowbird')
-      .setScale(2, 2)
+      .setScale(2)
       .setDepth(1);
   }
 
@@ -101,8 +106,25 @@ class GameScene extends Scene {
 
   private createGroundElement(x: number) {
     this.#groundGroup.add(
-      this.add.image(x, 700, 'base').setScale(1.5, 1.5).setOrigin(0, undefined)
+      this.add.image(x, 700, 'base').setScale(1.5).setOrigin(0, undefined)
     );
+  }
+
+  public createGameOver() {
+    const gameOver = this.add
+      .image(this.cameras.main.width / 2, 200, 'gameover')
+      .setScale(2)
+      .setAlpha(0);
+
+    this.#gameOverFadeInTween = this.tweens.add({
+      targets: gameOver,
+      alpha: {
+        value: 1,
+        duration: 500,
+        ease: 'Power1',
+      },
+      paused: true,
+    });
   }
 
   private pushPlayer() {
@@ -124,6 +146,7 @@ class GameScene extends Scene {
     this.pushPlayer();
     this.#playerGroundCollider.active = false;
     this.#animateGround = false;
+    this.#gameOverFadeInTween.play();
   }
 
   public resetStage() {
