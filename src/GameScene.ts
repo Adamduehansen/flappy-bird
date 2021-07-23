@@ -8,9 +8,11 @@ class GameScene extends Scene {
   #groundGroup!: Physics.Arcade.StaticGroup;
   #player!: Types.Physics.Arcade.SpriteWithDynamicBody;
   #playerGroundCollider!: Physics.Arcade.Collider;
+  #message!: GameObjects.Image;
 
   #messageFadeOutTween!: Tweens.Tween;
   #gameOverFadeInTween!: Tweens.Tween;
+  #gameFadeInTween!: Tweens.Tween;
 
   public preload() {
     this.load.image('background', 'assets/background-day.png');
@@ -35,6 +37,16 @@ class GameScene extends Scene {
       this.#groundGroup,
       this.gameOver.bind(this)
     );
+
+    this.#gameFadeInTween = this.tweens.add({
+      targets: [this.#player, this.#message],
+      paused: true,
+      alpha: {
+        value: 1,
+        duration: 500,
+        ease: 'Power1',
+      },
+    });
 
     this.resetStage();
 
@@ -65,7 +77,7 @@ class GameScene extends Scene {
   }
 
   private createMessage() {
-    const message = this.add
+    this.#message = this.add
       .image(
         this.cameras.main.width / 2,
         this.cameras.main.height / 2,
@@ -74,7 +86,7 @@ class GameScene extends Scene {
       .setScale(2.5, 2);
 
     this.#messageFadeOutTween = this.tweens.add({
-      targets: message,
+      targets: this.#message,
       alpha: {
         value: 0,
         duration: 500,
@@ -120,10 +132,14 @@ class GameScene extends Scene {
       targets: gameOver,
       alpha: {
         value: 1,
-        duration: 500,
+        duration: 1000,
         ease: 'Power1',
       },
+      hold: 1000,
       paused: true,
+      yoyo: true,
+      onComplete: this.resetStage,
+      onCompleteScope: this,
     });
   }
 
@@ -132,7 +148,6 @@ class GameScene extends Scene {
   }
 
   private newGame() {
-    this.#player.setY(this.cameras.main.height / 2);
     this.#messageFadeOutTween.play();
     this.pushPlayer();
     this.physics.resume();
@@ -150,11 +165,18 @@ class GameScene extends Scene {
   }
 
   public resetStage() {
+    this.#player.setAlpha(0);
+    this.#message.setAlpha(0);
+    this.#player.setY(this.cameras.main.height / 2);
     this.physics.pause();
     this.#player.play({
       key: 'flap',
       repeat: -1,
     });
+    this.#gameFadeInTween.play();
+    this.#enablePlayerControl = true;
+    this.#playerGroundCollider.active = true;
+    this.#animateGround = true;
   }
 }
 
