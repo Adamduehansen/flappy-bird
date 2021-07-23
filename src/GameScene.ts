@@ -14,7 +14,7 @@ class GameScene extends Scene {
   #gameOverFadeInTween!: Tweens.Tween;
   #gameFadeInTween!: Tweens.Tween;
 
-  public preload() {
+  public preload(): void {
     this.load.image('background', 'assets/background-day.png');
     this.load.image('base', 'assets/base.png');
     this.load.image('message', 'assets/message.png');
@@ -25,7 +25,7 @@ class GameScene extends Scene {
     this.load.image('gameover', 'assets/gameover.png');
   }
 
-  public create() {
+  public create(): void {
     this.add.image(0, 0, 'background').setScale(3.5).setOrigin(0, 0.4);
     this.createMessage();
     this.createPlayer();
@@ -63,7 +63,7 @@ class GameScene extends Scene {
     });
   }
 
-  public update() {
+  public update(): void {
     this.#groundGroup.children.each((ground) => {
       if (this.#animateGround) {
         const image = ground as GameObjects.Image;
@@ -76,7 +76,7 @@ class GameScene extends Scene {
     });
   }
 
-  private createMessage() {
+  private createMessage(): void {
     this.#message = this.add
       .image(
         this.cameras.main.width / 2,
@@ -96,7 +96,7 @@ class GameScene extends Scene {
     });
   }
 
-  private createPlayer() {
+  private createPlayer(): void {
     this.anims.create({
       key: 'flap',
       frames: this.anims.generateFrameNames('yellowbird'),
@@ -109,20 +109,20 @@ class GameScene extends Scene {
       .setDepth(1);
   }
 
-  private createGround() {
+  private createGround(): void {
     this.#groundGroup = this.physics.add.staticGroup();
     this.createGroundElement(0);
     this.createGroundElement(503);
     this.createGroundElement(1005);
   }
 
-  private createGroundElement(x: number) {
+  private createGroundElement(x: number): void {
     this.#groundGroup.add(
       this.add.image(x, 700, 'base').setScale(1.5).setOrigin(0, undefined)
     );
   }
 
-  public createGameOver() {
+  public createGameOver(): void {
     const gameOver = this.add
       .image(this.cameras.main.width / 2, 200, 'gameover')
       .setScale(2)
@@ -143,18 +143,18 @@ class GameScene extends Scene {
     });
   }
 
-  private pushPlayer() {
+  private pushPlayer(): void {
     this.#player.setVelocityY(-500);
   }
 
-  private newGame() {
+  private newGame(): void {
     this.#messageFadeOutTween.play();
     this.pushPlayer();
     this.physics.resume();
     this.#stageRunning = true;
   }
 
-  private gameOver() {
+  private gameOver(): void {
     this.#stageRunning = false;
     this.#enablePlayerControl = false;
     this.#player.stop();
@@ -164,7 +164,7 @@ class GameScene extends Scene {
     this.#gameOverFadeInTween.play();
   }
 
-  public resetStage() {
+  public resetStage(): void {
     this.#player.setAlpha(0);
     this.#message.setAlpha(0);
     this.#player.setY(this.cameras.main.height / 2);
