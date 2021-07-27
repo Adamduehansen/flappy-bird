@@ -17,7 +17,7 @@ class GameScene extends Scene {
   #enablePlayerControl = true;
   #animateGround = true;
 
-  #groundGroup!: Physics.Arcade.StaticGroup;
+  #groundGroup!: Physics.Arcade.Group;
   #pipesGroup!: Physics.Arcade.StaticGroup;
   #player!: Types.Physics.Arcade.SpriteWithDynamicBody;
   #playerGroundCollider!: Physics.Arcade.Collider;
@@ -102,13 +102,15 @@ class GameScene extends Scene {
 
   public update(): void {
     this.#groundGroup.children.each((ground) => {
+      const image = ground as Types.Physics.Arcade.SpriteWithDynamicBody;
       if (this.#animateGround) {
-        const image = ground as GameObjects.Image;
-        image.x -= 2;
+        image.setVelocityX(-200);
 
         if (image.x + this.cameras.main.width / 2 < 0) {
           image.x = this.cameras.main.width + 4;
         }
+      } else {
+        image.setVelocityX(0);
       }
     });
 
@@ -155,23 +157,28 @@ class GameScene extends Scene {
   }
 
   private createGround(): void {
-    this.#groundGroup = this.physics.add.staticGroup();
+    this.#groundGroup = this.physics.add.group();
     this.createGroundElement(0);
     this.createGroundElement(503);
     this.createGroundElement(1005);
   }
 
   private createGroundElement(x: number): void {
-    this.#groundGroup.add(
-      this.add
-        .image(x, 700, 'base')
-        .setScale(1.5)
-        .setOrigin(0, undefined)
-        .setDepth(1)
-    );
+    const ground = (
+      this.#groundGroup.create(
+        x,
+        700,
+        'base'
+      ) as Types.Physics.Arcade.SpriteWithDynamicBody
+    )
+      .setScale(1.5)
+      .setOrigin(0, undefined)
+      .setDepth(1)
+      .setImmovable(true);
+    ground.body.setAllowGravity(false);
   }
 
-  public createGameOver(): void {
+  private createGameOver(): void {
     const gameOver = this.add
       .image(this.cameras.main.width / 2, 200, 'gameover')
       .setScale(2)
