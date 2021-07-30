@@ -40,6 +40,10 @@ module.exports = {
           from: path.resolve(__dirname, 'public', 'style.css'),
           to: path.resolve(__dirname, 'build'),
         },
+        {
+          from: path.resolve(__dirname, 'public', 'fonts'),
+          to: path.resolve(__dirname, 'build', 'fonts'),
+        },
       ],
     }),
   ],

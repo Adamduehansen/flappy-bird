@@ -15,14 +15,16 @@ const PIPE_TOP_PUSH_UPWARDS = 100;
 class GameScene extends Scene {
   #stageRunning = false;
   #enablePlayerControl = true;
-  #animateGround = true;
+  #score = 0;
 
   #groundGroup!: Physics.Arcade.Group;
   #pipesGroup!: Physics.Arcade.Group;
+  #gapGroup!: Physics.Arcade.Group;
   #player!: Types.Physics.Arcade.SpriteWithDynamicBody;
   #playerGroundCollider!: Physics.Arcade.Collider;
   #playerPipeCollider!: Physics.Arcade.Collider;
   #message!: GameObjects.Image;
+  #scoreText!: GameObjects.Text;
 
   #messageFadeOutTween!: Tweens.Tween;
   #gameOverFadeInTween!: Tweens.Tween;
@@ -50,6 +52,7 @@ class GameScene extends Scene {
     this.createGameOver();
 
     this.#pipesGroup = this.physics.add.group();
+    this.#gapGroup = this.physics.add.group();
 
     this.#playerGroundCollider = this.physics.add.collider(
       this.#player,
@@ -63,6 +66,14 @@ class GameScene extends Scene {
       this.#player,
       this.#pipesGroup,
       this.gameOver,
+      undefined,
+      this
+    );
+
+    this.physics.add.collider(
+      this.#player,
+      this.#gapGroup,
+      this.increaseScore,
       undefined,
       this
     );
@@ -86,6 +97,14 @@ class GameScene extends Scene {
     });
 
     this.resetStage();
+
+    this.#scoreText = this.add
+      .text(this.cameras.main.width / 2, 50, '0', {
+        fontFamily: 'PressStart2P',
+        fontSize: '48px',
+      })
+      .setOrigin(0.5, 0)
+      .setDepth(2);
 
     this.input.on('pointerdown', () => {
       if (!this.#enablePlayerControl) {
@@ -191,6 +210,15 @@ class GameScene extends Scene {
     this.#player.setVelocityY(-500);
   }
 
+  private increaseScore(
+    _: Types.Physics.Arcade.GameObjectWithBody,
+    gap: Types.Physics.Arcade.GameObjectWithBody
+  ): void {
+    gap.destroy();
+    this.#score += 1;
+    this.#scoreText.setText(this.#score.toString());
+  }
+
   private spawnPipes(): void {
     const topPipeHeight =
       Math.floor(Math.random() * PIPE_TOP_MAX_HEIGHT) + PIPE_TOP_PUSH_UPWARDS;
@@ -210,7 +238,13 @@ class GameScene extends Scene {
       .setImmovable(true);
     topPipe.body.setAllowGravity(false);
 
-    // TODO: Gap
+    const gap = this.#gapGroup.create(
+      pipeSpawnX + 50,
+      topPipeHeight,
+      undefined
+    ) as Types.Physics.Arcade.SpriteWithDynamicBody;
+    gap.setVelocityX(-200).setVisible(false).setScale(1, 6.2).setOrigin(1, 0);
+    gap.body.setAllowGravity(false);
 
     const bottomPipe = this.#pipesGroup.create(
       pipeSpawnX,
@@ -233,6 +267,8 @@ class GameScene extends Scene {
     this.physics.resume();
     this.#stageRunning = true;
     this.#player.body.setAllowGravity(true);
+    this.#score = 0;
+    this.#scoreText.setText(this.#score.toString());
   }
 
   private gameOver(): void {
@@ -242,11 +278,11 @@ class GameScene extends Scene {
     this.pushPlayer();
     this.#playerGroundCollider.active = false;
     this.#playerPipeCollider.active = false;
-    this.#animateGround = false;
     this.#gameOverFadeInTween.play();
     this.#spawnPipesEvent.paused = true;
     this.#groundGroup.setVelocityX(0);
     this.#pipesGroup.setVelocityX(0);
+    this.#gapGroup.setVelocityX(0);
   }
 
   public resetStage(): void {
@@ -264,8 +300,8 @@ class GameScene extends Scene {
     this.#enablePlayerControl = true;
     this.#playerGroundCollider.active = true;
     this.#playerPipeCollider.active = true;
-    this.#animateGround = true;
     this.#pipesGroup.clear(true, true);
+    this.#gapGroup.clear(true, true);
   }
 }
 

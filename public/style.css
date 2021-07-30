@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'PressStart2P';
+  src: url('fonts/PressStart2P-Regular.ttf');
+}
+
 body {
   display: flex;
   align-items: center;
