@@ -9,4 +9,21 @@ body {
   justify-content: center;
   height: 100vh;
   background-color: bisque;
+  flex-direction: column-reverse;
+}
+
+p {
+  font-family: 'PressStart2P';
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightgreen;
+}
+
+#disclaimer {
+  width: 1000px;
 }
