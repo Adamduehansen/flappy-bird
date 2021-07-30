@@ -3,6 +3,7 @@ node_modules
 
 # assets
 public/images
+public/fonts
 
 # build
 build
