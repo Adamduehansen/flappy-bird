@@ -11,11 +11,13 @@ import {
 const PIPE_SPAWN_TIME_MS = 1250;
 const PIPE_TOP_MAX_HEIGHT = 300;
 const PIPE_TOP_PUSH_UPWARDS = 100;
+const HEIGH_SCORE_LOCALSTORAGE_KEY = 'highScore';
 
 class GameScene extends Scene {
   #stageRunning = false;
   #enablePlayerControl = true;
   #score = 0;
+  #highScore = 0;
 
   #groundGroup!: Physics.Arcade.Group;
   #pipesGroup!: Physics.Arcade.Group;
@@ -25,6 +27,7 @@ class GameScene extends Scene {
   #playerPipeCollider!: Physics.Arcade.Collider;
   #message!: GameObjects.Image;
   #scoreText!: GameObjects.Text;
+  #highScoreText!: GameObjects.Text;
 
   #messageFadeOutTween!: Tweens.Tween;
   #gameOverFadeInTween!: Tweens.Tween;
@@ -42,6 +45,7 @@ class GameScene extends Scene {
     });
     this.load.image('gameover', 'images/gameover.png');
     this.load.image('pipe', 'images/pipe-green.png');
+    this.#highScore = this.getHighScore();
   }
 
   public create(): void {
@@ -49,6 +53,7 @@ class GameScene extends Scene {
     this.createMessage();
     this.createPlayer();
     this.createGround();
+    this.createScoreTexts();
     this.createGameOver();
 
     this.#pipesGroup = this.physics.add.group();
@@ -98,14 +103,6 @@ class GameScene extends Scene {
 
     this.resetStage();
 
-    this.#scoreText = this.add
-      .text(this.cameras.main.width / 2, 50, '0', {
-        fontFamily: 'PressStart2P',
-        fontSize: '48px',
-      })
-      .setOrigin(0.5, 0)
-      .setDepth(2);
-
     this.input.on('pointerdown', () => {
       if (!this.#enablePlayerControl) {
         return;
@@ -119,6 +116,24 @@ class GameScene extends Scene {
     });
   }
 
+  private createScoreTexts(): void {
+    const textConfig: Types.GameObjects.Text.TextStyle = {
+      fontFamily: 'PressStart2P',
+      fontSize: '48px',
+    };
+
+    this.#scoreText = this.add
+      .text(this.cameras.main.width / 2, 50, '0', textConfig)
+      .setOrigin(0.5, 0)
+      .setDepth(2);
+
+    this.#highScoreText = this.add
+      .text(this.cameras.main.width / 2, 300, '', textConfig)
+      .setOrigin(0.5, 0)
+      .setDepth(2)
+      .setAlpha(0);
+  }
+
   public update(): void {
     this.#groundGroup.children.each((ground) => {
       const image = ground as Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -126,6 +141,8 @@ class GameScene extends Scene {
         image.x = this.cameras.main.width + 4;
       }
     });
+
+    this.#highScoreText.setText(`High Score: ${this.#highScore}`);
   }
 
   private createMessage(): void {
@@ -145,6 +162,22 @@ class GameScene extends Scene {
         ease: 'Power1',
       },
       paused: true,
+    });
+  }
+
+  private getHighScore(): number {
+    const highScore = localStorage.getItem(HEIGH_SCORE_LOCALSTORAGE_KEY);
+    if (highScore) {
+      return parseInt(highScore);
+    } else {
+      return 0;
+    }
+  }
+
+  private async setHighScore(score: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      localStorage.setItem(HEIGH_SCORE_LOCALSTORAGE_KEY, score.toString());
+      resolve();
     });
   }
 
@@ -192,7 +225,7 @@ class GameScene extends Scene {
       .setDepth(1);
 
     this.#gameOverFadeInTween = this.tweens.add({
-      targets: gameOver,
+      targets: [gameOver, this.#highScoreText],
       alpha: {
         value: 1,
         duration: 1000,
@@ -217,6 +250,13 @@ class GameScene extends Scene {
     gap.destroy();
     this.#score += 1;
     this.#scoreText.setText(this.#score.toString());
+  }
+
+  private updateHighScore(): void {
+    if (this.#score > this.#highScore) {
+      this.setHighScore(this.#score);
+      this.#highScore = this.#score;
+    }
   }
 
   private spawnPipes(): void {
@@ -278,6 +318,7 @@ class GameScene extends Scene {
     this.pushPlayer();
     this.#playerGroundCollider.active = false;
     this.#playerPipeCollider.active = false;
+    this.updateHighScore();
     this.#gameOverFadeInTween.play();
     this.#spawnPipesEvent.paused = true;
     this.#groundGroup.setVelocityX(0);
