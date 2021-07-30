@@ -44,6 +44,10 @@ module.exports = {
           from: path.resolve(__dirname, 'public', 'fonts'),
           to: path.resolve(__dirname, 'build', 'fonts'),
         },
+        {
+          from: path.resolve(__dirname, 'public', 'favicon.ico'),
+          to: path.resolve(__dirname, 'build'),
+        },
       ],
     }),
   ],
