@@ -2,7 +2,7 @@
 node_modules
 
 # assets
-public/assets
+public/images
 
 # build
 build

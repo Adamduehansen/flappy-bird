@@ -33,20 +33,24 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, 'public', 'assets'),
-          to: path.resolve(__dirname, 'build', 'assets'),
-        },
-        {
+          // Style
           from: path.resolve(__dirname, 'public', 'style.css'),
           to: path.resolve(__dirname, 'build'),
         },
         {
-          from: path.resolve(__dirname, 'public', 'fonts'),
-          to: path.resolve(__dirname, 'build', 'fonts'),
-        },
-        {
+          // Favicon
           from: path.resolve(__dirname, 'public', 'favicon.ico'),
           to: path.resolve(__dirname, 'build'),
+        },
+        {
+          // Images
+          from: path.resolve(__dirname, 'public', 'images'),
+          to: path.resolve(__dirname, 'build', 'images'),
+        },
+        {
+          // Fronts
+          from: path.resolve(__dirname, 'public', 'fonts'),
+          to: path.resolve(__dirname, 'build', 'fonts'),
         },
       ],
     }),

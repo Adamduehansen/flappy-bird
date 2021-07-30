@@ -33,15 +33,15 @@ class GameScene extends Scene {
   #spawnPipesEvent!: Time.TimerEvent;
 
   public preload(): void {
-    this.load.image('background', 'assets/background-day.png');
-    this.load.image('base', 'assets/base.png');
-    this.load.image('message', 'assets/message.png');
-    this.load.spritesheet('yellowbird', 'assets/yellowbird-spritesheet.png', {
+    this.load.image('background', 'images/background-day.png');
+    this.load.image('base', 'images/base.png');
+    this.load.image('message', 'images/message.png');
+    this.load.spritesheet('yellowbird', 'images/yellowbird-spritesheet.png', {
       frameWidth: 36,
       frameHeight: 24,
     });
-    this.load.image('gameover', 'assets/gameover.png');
-    this.load.image('pipe', 'assets/pipe-green.png');
+    this.load.image('gameover', 'images/gameover.png');
+    this.load.image('pipe', 'images/pipe-green.png');
   }
 
   public create(): void {
