@@ -7,6 +7,7 @@ import {
   Animations,
   Time,
 } from 'phaser';
+import './Bird';
 
 const PIPE_SPAWN_TIME_MS = 1250;
 const PIPE_TOP_MAX_HEIGHT = 300;
@@ -22,7 +23,7 @@ class GameScene extends Scene {
   #groundGroup!: Physics.Arcade.Group;
   #pipesGroup!: Physics.Arcade.Group;
   #gapGroup!: Physics.Arcade.Group;
-  #player!: Types.Physics.Arcade.SpriteWithDynamicBody;
+  #player!: IBird;
   #playerGroundCollider!: Physics.Arcade.Collider;
   #playerPipeCollider!: Physics.Arcade.Collider;
   #message!: GameObjects.Image;
@@ -110,7 +111,7 @@ class GameScene extends Scene {
         if (!this.#stageRunning) {
           this.newGame();
         } else {
-          this.pushPlayer();
+          this.#player.pushUp();
         }
       }
     });
@@ -188,11 +189,7 @@ class GameScene extends Scene {
       frameRate: 10,
     }) as Animations.Animation;
 
-    this.#player = this.physics.add
-      .sprite(150, this.cameras.main.height / 2, 'yellowbird')
-      .setScale(2)
-      .setDepth(2)
-      .setImmovable(true);
+    this.#player = this.add.bird(150, this.cameras.main.height / 2);
   }
 
   private createGround(): void {
@@ -237,10 +234,6 @@ class GameScene extends Scene {
       onComplete: this.resetStage,
       onCompleteScope: this,
     });
-  }
-
-  private pushPlayer(): void {
-    this.#player.setVelocityY(-500);
   }
 
   private increaseScore(
@@ -303,10 +296,9 @@ class GameScene extends Scene {
   private newGame(): void {
     this.#messageFadeOutTween.play();
     this.#spawnPipesEvent.paused = false;
-    this.pushPlayer();
-    this.physics.resume();
+    this.#player.pushUp();
     this.#stageRunning = true;
-    this.#player.body.setAllowGravity(true);
+    this.#player.freeze(false);
     this.#score = 0;
     this.#scoreText.setText(this.#score.toString());
   }
@@ -315,7 +307,7 @@ class GameScene extends Scene {
     this.#stageRunning = false;
     this.#enablePlayerControl = false;
     this.#player.stop();
-    this.pushPlayer();
+    this.#player.pushUp();
     this.#playerGroundCollider.active = false;
     this.#playerPipeCollider.active = false;
     this.updateHighScore();
@@ -329,8 +321,8 @@ class GameScene extends Scene {
   public resetStage(): void {
     this.#player.setAlpha(0);
     this.#player.setY(this.cameras.main.height / 2);
-    this.#player.body.setAllowGravity(false);
-    this.#player.setVelocityY(0);
+    this.#player.freeze(true);
+    this.#player.resetVelocity();
     this.#player.play({
       key: 'flap',
       repeat: -1,
