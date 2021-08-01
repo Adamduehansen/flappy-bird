@@ -15,3 +15,6 @@ Sprites and sounds are borrowed from [this Github repository](https://github.com
 ### Build production build
 
 `npm run build`
+
+## PWA
+The game comes with the cache PWA features which makes it work offline aswell.

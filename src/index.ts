@@ -3,6 +3,12 @@ import MainScene from './GameScene';
 import HighScoreManager from './HighScoreManager';
 import * as Bird from './Bird';
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js').then(() => {
+    console.log('Service Worker registered...');
+  });
+}
+
 Bird.register();
 
 const highScoreManager = new HighScoreManager();
