@@ -58,7 +58,6 @@ class GameScene extends Scene {
     this.load.image('gameover', 'images/gameover.png');
     this.load.image('pipe', 'images/pipe-green.png');
     this.load.audio('hit', 'sounds/hit.wav');
-    this.load.audio('hit', 'sounds/wing.wav');
     this.load.audio('point', 'sounds/point.wav');
     this.load.audio('wing', 'sounds/wing.wav');
     this.#highScore = this.#highScoreManager.getHighScore();
