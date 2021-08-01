@@ -8,6 +8,7 @@ import {
   Time,
 } from 'phaser';
 import './Bird';
+import { IHighScoreManger } from './HighScoreManager';
 
 const PIPE_SPAWN_TIME_MS = 1250;
 const PIPE_TOP_MAX_HEIGHT = 300;
@@ -36,6 +37,13 @@ class GameScene extends Scene {
 
   #spawnPipesEvent!: Time.TimerEvent;
 
+  #highScoreManager: IHighScoreManger;
+
+  constructor(highScoreManager: IHighScoreManger) {
+    super('main');
+    this.#highScoreManager = highScoreManager;
+  }
+
   public preload(): void {
     this.load.image('background', 'images/background-day.png');
     this.load.image('base', 'images/base.png');
@@ -46,7 +54,7 @@ class GameScene extends Scene {
     });
     this.load.image('gameover', 'images/gameover.png');
     this.load.image('pipe', 'images/pipe-green.png');
-    this.#highScore = this.getHighScore();
+    this.#highScore = this.#highScoreManager.getHighScore();
   }
 
   public create(): void {
@@ -166,22 +174,6 @@ class GameScene extends Scene {
     });
   }
 
-  private getHighScore(): number {
-    const highScore = localStorage.getItem(HEIGH_SCORE_LOCALSTORAGE_KEY);
-    if (highScore) {
-      return parseInt(highScore);
-    } else {
-      return 0;
-    }
-  }
-
-  private async setHighScore(score: number): Promise<void> {
-    return new Promise<void>((resolve) => {
-      localStorage.setItem(HEIGH_SCORE_LOCALSTORAGE_KEY, score.toString());
-      resolve();
-    });
-  }
-
   private createPlayer(): void {
     this.anims.create({
       key: 'flap',
@@ -247,7 +239,7 @@ class GameScene extends Scene {
 
   private updateHighScore(): void {
     if (this.#score > this.#highScore) {
-      this.setHighScore(this.#score);
+      this.#highScoreManager.setHighScore(this.#score);
       this.#highScore = this.#score;
     }
   }
