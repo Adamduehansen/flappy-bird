@@ -1,6 +1,9 @@
 import { AUTO, Game } from 'phaser';
 import MainScene from './GameScene';
 import HighScoreManager from './HighScoreManager';
+import * as Bird from './Bird';
+
+Bird.register();
 
 const highScoreManager = new HighScoreManager();
 

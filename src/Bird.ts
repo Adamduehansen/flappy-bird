@@ -1,6 +1,6 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 
-class Bird extends Physics.Arcade.Sprite implements IBird {
+class Bird extends Physics.Arcade.Sprite {
   constructor(scene: Scene, x: number, y: number) {
     super(scene, x, y, 'yellowbird');
     this.setScale(2).setDepth(2);
@@ -19,20 +19,22 @@ class Bird extends Physics.Arcade.Sprite implements IBird {
   }
 }
 
-GameObjects.GameObjectFactory.register(
-  'bird',
-  function (this: GameObjects.GameObjectFactory, x: number, y: number) {
-    const bird = new Bird(this.scene, x, y);
+export function register(): void {
+  GameObjects.GameObjectFactory.register(
+    'bird',
+    function (this: GameObjects.GameObjectFactory, x: number, y: number) {
+      const bird = new Bird(this.scene, x, y);
 
-    this.displayList.add(bird);
-    this.updateList.add(bird);
+      this.displayList.add(bird);
+      this.updateList.add(bird);
 
-    this.scene.physics.world.enableBody(bird, Physics.Arcade.DYNAMIC_BODY);
+      this.scene.physics.world.enableBody(bird, Physics.Arcade.DYNAMIC_BODY);
 
-    bird.setImmovable(true);
+      bird.setImmovable(true);
 
-    return bird;
-  }
-);
+      return bird;
+    }
+  );
+}
 
 export default Bird;

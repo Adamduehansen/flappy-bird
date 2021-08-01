@@ -7,13 +7,12 @@ import {
   Animations,
   Time,
 } from 'phaser';
-import './Bird';
+import Bird from './Bird';
 import { IHighScoreManger } from './HighScoreManager';
 
 const PIPE_SPAWN_TIME_MS = 1250;
 const PIPE_TOP_MAX_HEIGHT = 300;
 const PIPE_TOP_PUSH_UPWARDS = 100;
-const HEIGH_SCORE_LOCALSTORAGE_KEY = 'highScore';
 
 class GameScene extends Scene {
   #stageRunning = false;
@@ -24,7 +23,7 @@ class GameScene extends Scene {
   #groundGroup!: Physics.Arcade.Group;
   #pipesGroup!: Physics.Arcade.Group;
   #gapGroup!: Physics.Arcade.Group;
-  #player!: IBird;
+  #player!: Bird;
   #playerGroundCollider!: Physics.Arcade.Collider;
   #playerPipeCollider!: Physics.Arcade.Collider;
   #message!: GameObjects.Image;
