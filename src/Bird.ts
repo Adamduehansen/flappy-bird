@@ -1,6 +1,8 @@
-import { GameObjects, Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene, Sound } from 'phaser';
 
 class Bird extends Physics.Arcade.Sprite {
+  #wingSound!: Sound.BaseSound;
+
   constructor(scene: Scene, x: number, y: number) {
     super(scene, x, y, 'yellowbird');
     this.setScale(2).setDepth(2);
@@ -11,6 +13,8 @@ class Bird extends Physics.Arcade.Sprite {
   }
 
   pushUp(): void {
+    this.#wingSound = this.scene.sound.get('wing');
+    this.#wingSound.play();
     this.setVelocityY(-600);
   }
 

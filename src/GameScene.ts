@@ -6,6 +6,7 @@ import {
   Tweens,
   Animations,
   Time,
+  Sound,
 } from 'phaser';
 import Bird from './Bird';
 import { IHighScoreManger } from './HighScoreManager';
@@ -38,6 +39,9 @@ class GameScene extends Scene {
 
   #highScoreManager: IHighScoreManger;
 
+  #dieSound!: Sound.BaseSound;
+  #pointSound!: Sound.BaseSound;
+
   constructor(highScoreManager: IHighScoreManger) {
     super('main');
     this.#highScoreManager = highScoreManager;
@@ -53,6 +57,10 @@ class GameScene extends Scene {
     });
     this.load.image('gameover', 'images/gameover.png');
     this.load.image('pipe', 'images/pipe-green.png');
+    this.load.audio('hit', 'sounds/hit.wav');
+    this.load.audio('hit', 'sounds/wing.wav');
+    this.load.audio('point', 'sounds/point.wav');
+    this.load.audio('wing', 'sounds/wing.wav');
     this.#highScore = this.#highScoreManager.getHighScore();
   }
 
@@ -63,6 +71,10 @@ class GameScene extends Scene {
     this.createGround();
     this.createScoreTexts();
     this.createGameOver();
+
+    this.#dieSound = this.sound.add('hit');
+    this.#pointSound = this.sound.add('point');
+    this.sound.add('wing');
 
     this.#pipesGroup = this.physics.add.group();
     this.#gapGroup = this.physics.add.group();
@@ -234,6 +246,7 @@ class GameScene extends Scene {
     gap.destroy();
     this.#score += 1;
     this.#scoreText.setText(this.#score.toString());
+    this.#pointSound.play();
   }
 
   private updateHighScore(): void {
@@ -295,6 +308,7 @@ class GameScene extends Scene {
   }
 
   private gameOver(): void {
+    this.#dieSound.play();
     this.#stageRunning = false;
     this.#enablePlayerControl = false;
     this.#player.stop();

@@ -4,6 +4,7 @@ node_modules
 # assets
 public/images
 public/fonts
+public/sound
 
 # build
 build

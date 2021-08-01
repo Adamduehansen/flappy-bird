@@ -52,6 +52,11 @@ module.exports = {
           from: path.resolve(__dirname, 'public', 'fonts'),
           to: path.resolve(__dirname, 'build', 'fonts'),
         },
+        {
+          // Sound
+          from: path.resolve(__dirname, 'public', 'sounds'),
+          to: path.resolve(__dirname, 'build', 'sounds'),
+        },
       ],
     }),
   ],
