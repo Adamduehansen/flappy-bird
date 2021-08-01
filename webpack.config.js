@@ -10,7 +10,7 @@ const webpack = require('webpack');
 
 module.exports = (env) => {
   return {
-    mode: 'development',
+    mode: env.production === 'true' ? 'production' : 'development',
     entry: path.resolve(__dirname, 'src', 'index.ts'),
     output: {
       path: path.resolve(__dirname, 'build'),
