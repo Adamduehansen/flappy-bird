@@ -17,7 +17,7 @@ new Game({
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true,
+      debug: process.env.PHASER_DEBUG,
       gravity: {
         y: 1600,
       },

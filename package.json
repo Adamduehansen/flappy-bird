@@ -2,8 +2,8 @@
   "name": "flappy-bird",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack serve",
+    "build": "webpack --env phaser-debug=false",
+    "start": "webpack serve --env phaser-debug=true",
     "prettier": "prettier --write ./src/.",
     "eslint": "eslint ."
   },
