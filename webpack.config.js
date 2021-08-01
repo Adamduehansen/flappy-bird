@@ -59,6 +59,11 @@ module.exports = (env) => {
             from: path.resolve(__dirname, 'public', 'sounds'),
             to: path.resolve(__dirname, 'build', 'sounds'),
           },
+          {
+            // Manifest
+            from: path.resolve(__dirname, 'public', 'manifest.json'),
+            to: path.resolve(__dirname, 'build'),
+          },
         ],
       }),
       new webpack.EnvironmentPlugin({
