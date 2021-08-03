@@ -12,8 +12,16 @@ body {
   flex-direction: column-reverse;
 }
 
-p {
+p,
+button {
   font-family: 'PressStart2P';
+}
+
+button {
+  padding: 5px 10px;
+  border-radius: 0;
+  cursor: pointer;
+  border: 3px solid black;
 }
 
 a {

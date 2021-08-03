@@ -2,12 +2,22 @@ import { AUTO, Game } from 'phaser';
 import MainScene from './GameScene';
 import HighScoreManager from './HighScoreManager';
 import * as Bird from './Bird';
+import { registerServiceWorker } from './registerServiceWorker';
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js').then(() => {
-    console.log('Service Worker registered...');
-  });
-}
+registerServiceWorker();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let defferedPrompt: any;
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  defferedPrompt = event;
+});
+
+const installButton = document.querySelector('button') as HTMLButtonElement;
+installButton.addEventListener('click', () => {
+  defferedPrompt.prompt();
+});
 
 Bird.register();
 
