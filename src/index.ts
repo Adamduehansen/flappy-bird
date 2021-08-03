@@ -19,6 +19,14 @@ installButton.addEventListener('click', () => {
   defferedPrompt.prompt();
 });
 
+// Hide install info for PWA
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  const installPwaText = document.querySelector(
+    '#install-pwa-text'
+  ) as HTMLParagraphElement;
+  installPwaText.style.display = 'none';
+}
+
 Bird.register();
 
 const highScoreManager = new HighScoreManager();
