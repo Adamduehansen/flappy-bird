@@ -4,7 +4,9 @@ import HighScoreManager from './HighScoreManager';
 import * as Bird from './Bird';
 import { registerServiceWorker } from './registerServiceWorker';
 
-registerServiceWorker();
+if (process.env.NODE_ENV === 'production') {
+  registerServiceWorker();
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let defferedPrompt: any;
