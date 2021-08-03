@@ -1,6 +1,6 @@
 {
   "name": "flappy-bird",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "webpack --env phaser-debug=false --env production=true",
     "start": "webpack serve --env phaser-debug=true",

@@ -5,7 +5,7 @@ export type {};
 declare const self: ServiceWorkerGlobalScope;
 
 const cacheName = '::flappybird';
-const version = 'v1.0.0';
+const version = 'v1.0.1';
 
 const STATIC_CACHE_FILES: string[] = [
   '/',
